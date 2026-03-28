@@ -10,17 +10,14 @@ export function useCountryRisk(code: string) {
   });
 }
 
-export function useCountriesOverview() {
-  return useQuery({
-    queryKey: ['geo', 'overview'],
-    queryFn: () => geoAPI.getCountriesOverview().then(res => res.data as CountryRisk[]),
-  });
-}
-
 export function useSectorImpact(code: string) {
   return useQuery({
     queryKey: ['geo', 'sectors', code],
-    queryFn: () => geoAPI.getSectorImpact(code).then(res => res.data as SectorImpact[]),
+    queryFn: () => 
+      geoAPI.getSectorImpact(code).then(res => {
+        // Backend returns SectorImpactResponse with sector_impacts array
+        return res.data.sector_impacts as SectorImpact[];
+      }),
     enabled: !!code,
   });
 }

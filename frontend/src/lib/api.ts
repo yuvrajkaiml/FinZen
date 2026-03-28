@@ -72,10 +72,32 @@ export const newsAPI = {
   triggerIngestion: () => api.post('/news/ingest'),
 };
 export const geoAPI = {
-  getCountryRisk: (code: string) => api.get(`/geo/country/${code}/risk-score`),
-  getSectorImpact: (code: string) => api.get(`/geo/country/${code}/sectors`),
-  getPortfolioExposure: (portfolioId: string) => api.post('/geo/portfolio/exposure', null, { params: { portfolio_id: portfolioId } }),
-  getCountriesOverview: () => api.get('/geo/countries/overview'),
+  getCountryRisk: (code: string) => api.get(`/geo/risk/${code}`),
+  getSectorImpact: (code: string) => api.get(`/geo/sectors/${code}`),
+  getSectorStocks: (code: string) => api.get(`/geo/sectors/${code}/stocks`),
+  getPortfolioExposure: (portfolioData: any) => api.post('/geo/portfolio/exposure', portfolioData),
+  simulate: (portfolioData: any) => api.post('/geo/simulate', portfolioData),
+};
+export const trustAPI = {
+  // Source reliability management
+  upsertSource: (data: { source_name: string; accuracy_score: number; sector?: string; total_articles?: number }) => 
+    api.post('/trust/source', data),
+  getSource: (name: string) => 
+    api.get(`/trust/source/${name}`),
+  
+  // Article trust scoring
+  scoreArticle: (data: { 
+    source: string; 
+    content: string; 
+    sentiment: "positive" | "negative" | "neutral"; 
+    timestamp: string;  // ISO date string
+    sector?: string;
+    peer_articles?: Array<{ source: string; sentiment: "positive" | "negative" | "neutral" }>;
+  }) => api.post('/trust/article/score', data),
+  
+  // Consensus scoring
+  calculateConsensus: (articles: Array<{ source: string; sentiment: "positive" | "negative" | "neutral" }>) => 
+    api.post('/trust/consensus', { articles }),
 };
 export const aiAPI = {
   chat: (data: { message: string; conversation_id?: string; context?: any }) => api.post('/ai/chat', data),

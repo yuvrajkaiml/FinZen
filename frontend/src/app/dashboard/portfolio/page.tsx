@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import { FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { SoftCard } from '@/components/shared/SoftCard';
 import { AnimatedNumber } from '@/components/shared/AnimatedNumber';
@@ -13,15 +14,135 @@ const MOCK_PORTFOLIOS = [
 ];
 
 export default function PortfoliosPage() {
+  const [portfolios, setPortfolios] = useState(MOCK_PORTFOLIOS);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newCurrency, setNewCurrency] = useState('USD');
+  const [newValue, setNewValue] = useState('');
+
+  const handleCreatePortfolio = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const trimmedName = newName.trim();
+    const parsedValue = Number(newValue);
+    if (!trimmedName || Number.isNaN(parsedValue) || parsedValue < 0) {
+      return;
+    }
+
+    const colorCycle = ['indigo', 'teal', 'amber'] as const;
+    const nextIndex = portfolios.length % colorCycle.length;
+
+    const newPortfolio = {
+      id: String(Date.now()),
+      name: trimmedName,
+      currency: newCurrency,
+      value: parsedValue,
+      return: 0,
+      holdings: 0,
+      color: colorCycle[nextIndex],
+    };
+
+    setPortfolios((prev) => [newPortfolio, ...prev]);
+    setNewName('');
+    setNewCurrency('USD');
+    setNewValue('');
+    setShowCreateForm(false);
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
       <div className="flex items-center justify-between pb-6 border-b border-border-light">
         <h1 className="font-display text-4xl text-text-primary">My Portfolios</h1>
-        <Button className="font-sans shadow-xs bg-accent-indigo text-white hover:bg-accent-indigo-mid transition-all">+ New Portfolio</Button>
+        <Button
+          className="font-sans shadow-xs bg-accent-indigo text-white hover:bg-accent-indigo-mid transition-all"
+          onClick={() => setShowCreateForm(true)}
+        >
+          + New Portfolio
+        </Button>
       </div>
 
+      {showCreateForm && (
+        <motion.form
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          onSubmit={handleCreatePortfolio}
+          className="bg-surface border border-border-light rounded-2xl p-4 md:p-5 flex flex-col md:flex-row gap-3 md:items-end"
+        >
+          <div className="flex-1">
+            <label htmlFor="portfolio-name" className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-2">
+              Portfolio Name
+            </label>
+            <input
+              id="portfolio-name"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="Example: Macro Volatility Shield"
+              className="w-full h-10 px-3 rounded-lg border border-border-light bg-elevated text-text-primary outline-none focus:ring-2 focus:ring-accent-indigo"
+              autoFocus
+            />
+          </div>
+
+          <div className="w-full md:w-32">
+            <label htmlFor="portfolio-currency" className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-2">
+              Currency
+            </label>
+            <select
+              id="portfolio-currency"
+              value={newCurrency}
+              onChange={(e) => setNewCurrency(e.target.value)}
+              className="w-full h-10 px-3 rounded-lg border border-border-light bg-elevated text-text-primary outline-none focus:ring-2 focus:ring-accent-indigo"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+
+          <div className="w-full md:w-44">
+            <label htmlFor="portfolio-value" className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-2">
+              Initial Value
+            </label>
+            <input
+              id="portfolio-value"
+              type="number"
+              min="0"
+              step="0.01"
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              placeholder="e.g. 250000"
+              className="w-full h-10 px-3 rounded-lg border border-border-light bg-elevated text-text-primary outline-none focus:ring-2 focus:ring-accent-indigo"
+              required
+            />
+          </div>
+
+          <div className="flex gap-2 w-full md:w-auto">
+            <Button
+              type="submit"
+              className="bg-accent-indigo text-white hover:bg-accent-indigo-mid w-full md:w-auto"
+              disabled={!newName.trim() || newValue === '' || Number(newValue) < 0}
+            >
+              Create
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full md:w-auto"
+              onClick={() => {
+                setShowCreateForm(false);
+                setNewName('');
+                setNewCurrency('USD');
+                setNewValue('');
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </motion.form>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-        {MOCK_PORTFOLIOS.map((p, i) => (
+        {portfolios.map((p, i) => (
           <motion.div
             key={p.id}
             initial={{ opacity: 0, y: 20 }}

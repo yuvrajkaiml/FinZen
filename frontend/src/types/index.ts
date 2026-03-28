@@ -1,6 +1,7 @@
 export * from './portfolio';
 export * from './news';
 export * from './geopolitical';
+export * from './trust';
 export * from './api';
 
 export interface User {
