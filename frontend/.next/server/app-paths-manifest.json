@@ -1,0 +1,12 @@
+{
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/dashboard/knowledge-graph/page": "app/dashboard/knowledge-graph/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/portfolio/page": "app/dashboard/portfolio/page.js",
+  "/dashboard/xray/page": "app/dashboard/xray/page.js",
+  "/dashboard/geopolitical/page": "app/dashboard/geopolitical/page.js",
+  "/dashboard/scenario/page": "app/dashboard/scenario/page.js",
+  "/dashboard/news/page": "app/dashboard/news/page.js",
+  "/dashboard/risk-profile/page": "app/dashboard/risk-profile/page.js",
+  "/dashboard/ai-assistant/page": "app/dashboard/ai-assistant/page.js"
+}

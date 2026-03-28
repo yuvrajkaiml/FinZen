@@ -1,0 +1,2 @@
+export interface CountryRisk { country_code: string; country_name: string; composite_score: number; risk_level: "low"|"medium"|"high"|"critical"; dimensions: { political_stability: number; economic_risk: number; military_conflict: number; sanctions_risk: number; currency_risk: number; }; last_updated: string; }
+export interface SectorImpact { sector: string; impact_score: number; affected_companies: string[]; }
