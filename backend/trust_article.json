@@ -1,0 +1,10 @@
+﻿{
+  "source": "Reuters",
+  "content": "Oil prices surge after regional tensions.",
+  "sentiment": "positive",
+  "timestamp": "2026-03-28",
+  "peer_articles": [
+    {"source": "Bloomberg", "sentiment": "positive"},
+    {"source": "BlogX", "sentiment": "negative"}
+  ]
+}

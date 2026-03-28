@@ -1,0 +1,7 @@
+﻿{
+  "articles": [
+    {"source": "Reuters", "sentiment": "positive"},
+    {"source": "Bloomberg", "sentiment": "positive"},
+    {"source": "BlogX", "sentiment": "negative"}
+  ]
+}
